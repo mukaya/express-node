@@ -1,20 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
+<%- include('../includes/header') %> 
+<div class="container">
     <h1>Liste des apprenants</h1>
-    <ul>
-        <% for(let apprenant of apprenants) {%>
-        <li><%= apprenant.nom %> <%= apprenant.prenom %> <a href="/apprenants/<%= apprenant.id %>">Voir détails</a></li>
-        <% } %>
-    </ul>
-    <p><a href="/apprenants/new">Ajouter un nouvel apprenant</a></p>
-</body>
+    <table class="table table-dark">
+        <thead>
+            <th>NOM</th>
+            <th>PRENOM</th>
+            <th>ACTION</th>
+        </thead>
+        <tbody>
+            <% for(let apprenant of apprenants) {%>
+                <tr>
+                    <td><%= apprenant.nom %></td>
+                    <td> <%= apprenant.prenom %></td>
+                    <td>
+                        <a class="btn btn-primary" href="/apprenants/<%= apprenant.id %>">Voir détails</a>
+                        <a class="btn btn-danger" href="/apprenants/delete/<%= apprenant.id %>"
+                           onclick="confirm('Tu es sur de supprimer cette enregistrement')">Supprimer</a>
+                        <a class="btn btn-success" href="/apprenants/edit/<%= apprenant.id %>">Modifier</a>
+                    </td>
+                </tr>
+                <% } %>
+        </tbody>
+    </table>
+    <p><a class="btn btn-primary" href="/apprenants/new">Ajouter un nouvel apprenant</a></p>
+</div>
+<%- include('../includes/footer') %> 
 
-</html>

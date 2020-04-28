@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= apprenant.prenom  %></title>
-</head>
-
-<body>
-    <a href="/apprenants">&lt;-Retourner à liste</a>
-    <h1><%= apprenant.prenom+" "+apprenant.nom %> </h1>
-    <p>Nom : <%= apprenant.nom %></p>
-    <p>Prenom : <%= apprenant.prenom %></p>
-</body>
-
-</html>
+<%- include('../includes/header.ejs') %> 
+    <div class="container">
+        <a href="/apprenants" class="btn btn-primary mt-3">&lt;-Retourner à liste</a>
+        <h1><%= apprenant.prenom+" "+apprenant.nom %> </h1>
+        <p>Nom : <%= apprenant.nom %></p>
+        <p>Prenom : <%= apprenant.prenom %></p>
+    </div>
+<%- include('../includes/footer.ejs') %> 

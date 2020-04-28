@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <a href="/apprenants">&lt;-Retourner à liste</a>
-    <h1>Nouvel apprenant</h1>
-    <form action="/apprenants" method="POST">
+<%- include('../includes/header.ejs') %> 
+   <div class="container">
+    <a href="/apprenants" class="btn btn-primary mt-3">&lt;-Retourner à liste</a>
+    <h1><%= title %></h1>
+    <form action="/apprenants" method="POST" id="form">
+        <input type="hidden" name="id" id="id" value="<%= apprenant.id ? apprenant.id : ''%>">
         <label for="nom">Nom</label><br>
-        <input type="text" name="nom" />
+        <input type="text" name="nom" class="form-control" value="<%= apprenant.nom ? apprenant.nom : '' %>"/>
         <br><br>
         <label for="prenom">Prenom</label><br>
-        <input type="text" name="prenom" /><br>
-        <input type="submit" value="Créer" />
+        <input type="text" name="prenom" class="form-control" value="<%= apprenant.prenom ? apprenant.prenom :'' %>"/><br>
+        <button type="submit" id="btn" class="btn btn-primary">Créer</button>
     </form>
-</body>
-
-</html>
+   </div>
+   <script src="../../script.js"></script>
+<%- include('../includes/footer.ejs') %> 
