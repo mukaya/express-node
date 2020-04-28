@@ -27,7 +27,12 @@ server.set('views');
 //Dire à express d'utiliser EJS comme moteur de template
 server.set('view engine', 'ejs');
 
-//GET
+server.get('/apprenants', (req, res) => {
+  connection.query('select * from students', (erreur, resultat) => {
+    if (erreur) throw erreur;
+    return res.render('apprenants/index', { apprenants: resultat });
+  });
+});
 
 //Définition du port
 const PORT = 8000;
