@@ -1,6 +1,8 @@
 const express = require('express');
 const ejs = require('ejs');
 const mysql = require('mysql');
+const { check, validationResult } = require('express-validator');
+const expressSession = require('express-session');
 
 //Configuration de la base de données
 const connection = mysql.createConnection({
@@ -23,6 +25,7 @@ const server = express();
 
 //Dire à express de mettre les données venants du formulaire dans BODY
 server.use(express.urlencoded({ extended: false }));
+server.use(expressSession({secret:'osee', saveUninitialized: false, resave: false}));
 
 //Dire à express où aller trouver les vues(Nos pages web que le user sait voir)
 server.set('views');
@@ -34,18 +37,36 @@ server.use(express.static('public'));
 server.get('/apprenants', (req, res) => {
   connection.query('select * from students', (erreur, resultat) => {
     if (erreur) throw erreur;
-    return res.render('apprenants/index', { apprenants: resultat });
+    return res.render('apprenants/index', { 
+      apprenants: resultat
+    });
   });
 });
 
-server.post('/apprenants', (req, res) => {
-  connection.query(
-    `insert into students(nom,prenom) values('${req.body.nom}','${req.body.prenom}')`,
-    (erreur, resultat) => {
-      if (erreur) throw erreur;
-      return res.redirect('/apprenants');
-    }
-  );
+server.post('/apprenants',[
+  check('nom','le nom est vide').not().isEmpty(),
+  check('prenom','le prenom est vide').not().isEmpty(),
+],(req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    res.render('apprenants/new',{
+      title:'Ajouter un apprenant',
+      errors: errors.mapped(),
+      apprenant:{
+        id : '',
+        nom: '',
+        prenom: ''
+      }
+    });
+  }else{
+      connection.query(
+      `insert into students(nom,prenom) values('${req.body.nom}','${req.body.prenom}')`,
+      (erreur, resultat) => {
+        if (erreur) throw erreur;
+        return res.redirect('/apprenants');
+      }
+    );
+  }
 });
 
 server.get('/apprenants/new', (req, res) => {
@@ -96,14 +117,30 @@ server.get('/apprenants/edit/:apprenantId', (req, res)=>{
   });
 });
 //edit apprenant
-server.post('/apprenants/edit', (req, res) => {
-  const { id, nom, prenom } = req.body;
-  const sql = `update students set nom = ?, prenom = ? where id = ?`
- connection.query(sql,[nom,prenom,id],(erreur, resultat) => {
-      if (erreur) throw erreur;
-      return res.redirect('/apprenants');
-    }
-  );
+server.post('/apprenants/edit',[
+  check('nom','le nom est vide').not().isEmpty(),
+  check('prenom','le prenom est vide').not().isEmpty(),
+], (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    res.render('apprenants/new',{
+      title:'Ajouter un apprenant',
+      errors: errors.mapped(),
+      apprenant:{
+        id : '',
+        nom: '',
+        prenom: ''
+      }
+    });
+  }else{
+    const { id, nom, prenom } = req.body;
+    const sql = `update students set nom = ?, prenom = ? where id = ?`
+    connection.query(sql,[nom,prenom,id],(erreur, resultat) => {
+        if (erreur) throw erreur;
+        return res.redirect('/apprenants');
+      }
+    );
+  }
 });
 
 
